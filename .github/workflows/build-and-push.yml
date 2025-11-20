@@ -1,0 +1,30 @@
+name: Build and Push Docker Image to Scaleway
+
+on:
+  push:
+    branches:
+      - master # Change to 'main' if that's your default branch
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Scaleway Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: rg.fr-par.scw.cloud/namespace-tender-volhard
+          username: n/a # Use 'nologin' or 'oauth2' based on Scaleway's current recommendation
+          password: ${{ secrets.SCW_CONTAINER_REGISTRY_API_KEY }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: rg.fr-par.scw.cloud/namespace-tender-volhard/rss-app-lab:latest
+
+      - name: Logout from Scaleway Container Registry
+        run: docker logout rg.fr-par.scw.cloud/namespace-tender-volhard
