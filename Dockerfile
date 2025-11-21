@@ -24,6 +24,9 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/next.config.js ./
 
+# Copy tracing file
+COPY tracing.js .
+
 # Copy start script
 COPY start.sh .
 RUN chmod +x start.sh
